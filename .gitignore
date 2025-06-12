@@ -3,3 +3,5 @@
 
 .pnp.cjs
 .pnp.loader.mjs
+
+dist/*

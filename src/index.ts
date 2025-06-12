@@ -4,6 +4,8 @@
  * leveraging the ioredis library for Redis communication.
  */
 
+// TODO: The entire policy set is re-serialized and sent to Redis for every modification. For very large policy sets or extremely high write loads, this might have performance implications.
+
 import { Helper, Model, FilteredAdapter } from 'casbin';
 import Redis, { RedisOptions } from 'ioredis';
 

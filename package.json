@@ -1,8 +1,39 @@
 {
+  "name": "@ocean.chat/casbin-ioredis-adapter",
+  "version": "0.1.0",
+  "description": "A Casbin adapter for ioredis, allowing Redis to be used as a policy storage backend.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "README-zh.md"
+  ],
   "packageManager": "yarn@4.7.0",
   "scripts": {
     "test": "jest --config jest.config.js",
     "build": "tsc --project tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JamesWilson19970101/redis-adapter.git"
+  },
+  "keywords": [
+    "casbin",
+    "adapter",
+    "ioredis",
+    "redis",
+    "authorization",
+    "access control",
+    "acl",
+    "rbac"
+  ],
+  "author": "James <happyjames19970101@gmail.com> (https://github.com/JamesWilson19970101)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JamesWilson19970101/redis-adapter/issues"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
