@@ -1,6 +1,6 @@
 {
   "name": "@ocean.chat/casbin-ioredis-adapter",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "A Casbin adapter for ioredis, allowing Redis to be used as a policy storage backend.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
