@@ -9,7 +9,8 @@
     "dist",
     "LICENSE",
     "README.md",
-    "README-zh.md"
+    "README-zh.md",
+    "package.json"
   ],
   "packageManager": "yarn@4.7.0",
   "scripts": {
