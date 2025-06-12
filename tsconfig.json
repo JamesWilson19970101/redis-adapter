@@ -16,6 +16,11 @@
     /* Type Checking */
     "strict": true,                                      /* Enable all strict type-checking options. */
     "strictPropertyInitialization": true,             /* Check for class properties that are declared but not set in the constructor. */
+
+    "outDir": "dist",                                    /* Redirect output structure to the dist directory. */
+    "types": [
+      "jest", "node"                          /* Include type definitions for Jest and Node.js. */
+    ],                     /* Include type definitions for Jest and Node.js. */
   },
   "include": [
     "src/**/*.ts"                                      /* Include all TypeScript files in the src directory and its subdirectories. */
