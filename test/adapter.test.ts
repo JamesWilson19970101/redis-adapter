@@ -2,22 +2,28 @@ import { newEnforcer, Enforcer } from 'casbin';
 import * as path from 'path';
 import { IoRedisAdapter, IConnectionOptions } from '../src/index';
 
+const createdAdapters: IoRedisAdapter[] = []; // Array to store all created adapter instances
+
 async function getEnforcer(options: IConnectionOptions): Promise<Enforcer> {
     const adapter = await IoRedisAdapter.newAdapter(options);
+    createdAdapters.push(adapter); // Store the adapter
     const modelPath = path.resolve(__dirname, 'model.conf');
     const enforcer = await newEnforcer(modelPath, adapter);
     return enforcer;
 }
 
 describe('IoRedisAdapter', () => {
-
     let enforcer: Enforcer;
+    // This specific adapter instance is created in beforeEach and used by some direct adapter calls.
+    // It will also be added to createdAdapters.
+    let mainAdapterForTests: IoRedisAdapter; 
     const redisOptions: IConnectionOptions = { host: 'localhost', port: 6379, db: 0 };
 
     beforeEach(async ()=> {
-        const adapter = await IoRedisAdapter.newAdapter(redisOptions);
+        mainAdapterForTests = await IoRedisAdapter.newAdapter(redisOptions);
+        createdAdapters.push(mainAdapterForTests); // Store the adapter
         const modelPath = path.resolve(__dirname, 'model.conf');
-        enforcer = await newEnforcer(modelPath, adapter);
+        enforcer = await newEnforcer(modelPath, mainAdapterForTests);
 
         // Clear the Redis database before each test
         const redis = (enforcer.getAdapter() as any).redisInstance;
@@ -29,11 +35,24 @@ describe('IoRedisAdapter', () => {
     })
 
     afterAll(async () => {
-        // Clear the Redis database before each test
-        const redis = (enforcer.getAdapter() as any).redisInstance;
-        await redis.flushdb();
-        // close the Redis connection after all tests
-        await (enforcer.getAdapter() as IoRedisAdapter).close();
+        // Attempt to flush the DB using the first available adapter's instance
+        if (createdAdapters.length > 0) {
+            const firstAdapter = createdAdapters[0] as any; // Cast to any to access internal redisInstance
+            if (firstAdapter.redisInstance && typeof firstAdapter.redisInstance.flushdb === 'function') {
+                try {
+                    await firstAdapter.redisInstance.flushdb();
+                    console.log('Database flushed in afterAll.');
+                } catch (err) {
+                    console.error('Error flushing database in afterAll:', err);
+                }
+            }
+        }
+
+        // Close all created adapter connections
+        for (const adapter of createdAdapters) {
+            await adapter.close();
+        }
+        console.log(`Closed ${createdAdapters.length} adapter connections in afterAll.`);
     });
 
     test('should save policies to Redis and load them back correctly', async () => {
